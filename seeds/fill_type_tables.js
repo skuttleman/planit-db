@@ -8,7 +8,7 @@ exports.seed = function(knex, Promise) {
   ]).then(function() {
     return Promise.all([
       knex('roles').insert([
-        { name: 'noraml' },
+        { name: 'normal' },
         { name: 'moderator' },
         { name: 'admin' }
       ]),
