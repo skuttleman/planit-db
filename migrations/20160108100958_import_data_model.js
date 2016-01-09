@@ -65,7 +65,7 @@ exports.up = function(knex, Promise) {
         table.integer('recipient_id').unsigned().references('id').inTable('members').onDelete('CASCADE');
         table.primary(['message_id', 'recipient_id']);
       }),
-      knex.schema.createTable('planit_tasks', function(table) {
+      knex.schema.createTable('tasks', function(table) {
         table.increments('id');
         table.integer('planit_id').unsigned().references('id').inTable('planits').onDelete('CASCADE');
         table.datetime('start_time');
@@ -89,14 +89,14 @@ exports.up = function(knex, Promise) {
     return Promise.all([
       knex.schema.createTable('proposals', function(table) {
         table.increments('id');
-        table.integer('planit_task_id').unsigned().references('id').inTable('planit_tasks').onDelete('CASCADE');
+        table.integer('task_id').unsigned().references('id').inTable('tasks').onDelete('CASCADE');
         table.integer('member_id').unsigned().references('id').inTable('members').onDelete('CASCADE');
         table.text('details');
         table.float('cost_estimate', 8, 2).unsigned().notNullable();
         table.boolean('is_accepted');
       }),
       knex.schema.createTable('task_descriptions', function(table) {
-        table.integer('id').unsigned().references('id').inTable('planit_tasks').onDelete('CASCADE');
+        table.integer('id').unsigned().references('id').inTable('tasks').onDelete('CASCADE');
         table.string('description');
         table.primary('id');
       }),
@@ -117,7 +117,7 @@ exports.down = function(knex, Promise) {
   ]).then(function() {
     return Promise.all([
       knex.schema.dropTableIfExists('ratings'),
-      knex.schema.dropTableIfExists('planit_tasks'),
+      knex.schema.dropTableIfExists('tasks'),
       knex.schema.dropTableIfExists('message_recipients')
     ]);
   }).then(function() {
