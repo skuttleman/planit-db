@@ -3,7 +3,8 @@ exports.seed = function(knex, Promise) {
   if (false) {
     return Promise.all([
       knex('skills'),
-      knex('members').where('display_name', 'like', '%Elana%')
+      knex('members').where('display_name', 'like', '%Elana%'),
+      knex('member_skills').del()
     ]).then(function(data) {
       var elana = data[1][0];
       var skills = data[0];
