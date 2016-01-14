@@ -1,6 +1,6 @@
 
 exports.seed = function(knex, Promise) {
-  if (true) {
+  if (false) {
     return Promise.all([
       knex('planits').del(),
       knex('tasks').del()
