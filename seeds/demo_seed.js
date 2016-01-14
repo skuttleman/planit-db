@@ -1,33 +1,36 @@
 
 exports.seed = function(knex, Promise) {
   if (true) {
-    return Promise.all([
-      knex('roles'),
-      knex('planit_types').del(),
-      knex('skills').del()
-    ]).then(function(data) {
+    return knex('member_skills').del().then(function() {
+      return Promise.all([
+        knex('roles'),
+        knex('planit_types').del(),
+        knex('skills').del()
+      ]);
+    }).then(function(data) {
       return Promise.all([
         knex('members'),
         knex('planit_types').returning('*').insert([
           { name: 'Wedding' },
-          { name: 'Bussiness Conference' },
+          { name: 'Business Conference' },
           { name: 'Fundraiser' },
           { name: 'Political Rally' },
           { name: 'Graduation' },
           { name: 'Birthday Party' },
           { name: 'Bar/Bat Mitzvah' },
           { name: 'Meet-up' },
-          { name: 'Corporate Retreat' }
+          { name: 'Corporate Retreat' },
+          { name: 'Other' }
         ]),
         knex('skills').returning('*').insert([
-          { name: 'Assistant' },
+          { name: 'Administration' },
           { name: 'Security' },
           { name: 'Musician' },
           { name: 'Caterer' },
           { name: 'Florist' },
           { name: 'DJ' },
           { name: 'Bartender' },
-          { name: 'Host' }
+          { name: 'Event Host' }
         ])
       ]);
     }).then(function(data) {
@@ -40,8 +43,8 @@ exports.seed = function(knex, Promise) {
       }).then(function(tasks) {
         var other = tasks.filter(function(task) {
           return !task.skill_id;
-        })[0].id;
-        knex('skill_description').insert({
+        })[0];
+        return knex('skill_description').insert({
           id: other.id,
           description: 'Balloon Animals Expert'
         });
@@ -94,7 +97,7 @@ function createPlanits(members, planitTypes) {
       member_id: extract(members, 'display_name', /elana/gi).id,
       start_date: '10-1-16',
       end_date: '10-1-16',
-      budget: 1000,
+      budget: 1500,
       street_address: '1623 Bullstail Way',
       city: 'Small Town',
       state: 'VA',
@@ -149,20 +152,27 @@ function createTasks(planits, planitTypes, skills) {
       end_time: '9-13-16 10:00PM',
       skill_id: extract(skills, 'name', 'Musician').id,
       head_count: 1,
-      budget: 250
+      budget: 500
     },{
       planit_id: extract(planits, 'title', /johnny/gi).id,
       start_time: '9-13-16 3:00PM',
       end_time: '9-13-16 8:00PM',
       head_count: 2,
-      budget: 250
+      budget: 750
     },{
       planit_id: extract(planits, 'title', /johnny/gi).id,
       start_time: '9-13-16 7:00AM',
       end_time: '9-13-16 12:00PM',
-      skill_id: extract(skills, 'name', 'Assistant').id,
+      skill_id: extract(skills, 'name', 'Administration').id,
       head_count: 1,
-      budget: 250
+      budget: 200
+    },{
+      planit_id: extract(planits, 'title', /venting/gi).id,
+      start_time: '1-19-16 2:00PM',
+      end_time: '1-23-16 7:00AM',
+      skill_id: extract(skills, 'name', 'Security').id,
+      head_count: 1,
+      budget: 300
     }
   ];
 }
